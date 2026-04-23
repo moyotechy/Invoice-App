@@ -1,17 +1,56 @@
+import { useState, useEffect } from "react";
+
 export default function Sidebar() {
+  const [dark, setDark] = useState(false);
+
+  // Load saved theme
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+
+    if (saved === "dark") {
+      document.documentElement.classList.add("dark");
+      setDark(true);
+    }
+  }, []);
+
+  function toggleTheme() {
+    if (dark) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    }
+
+    setDark(!dark);
+  }
+
   return (
-    <aside className="hidden md:flex flex-col items-center justify-between w-20 h-screen bg-[#1E2139] py-6">
+    <aside
+      className="
+        fixed top-0 left-0 z-50
+        w-full h-16
+        flex flex-row justify-between items-center px-6
+        bg-[#1E2139]
 
-      {/* Logo */}
-      <div className="w-10 h-10 bg-primary rounded-lg"></div>
+        md:static md:w-24 md:h-screen md:flex-col md:py-6
+      "
+    >
+      {/* LOGO */}
+      <div className="w-10 h-10 bg-gradient-to-tr from-purple-500 to-purple-300 rounded-xl"></div>
 
-      {/* Bottom (theme + avatar) */}
-      <div className="flex flex-col items-center gap-6">
-        <button className="text-white">🌙</button>
+      {/* RIGHT SIDE (mobile) / BOTTOM (desktop) */}
+      <div className="flex items-center gap-6 md:flex-col">
 
-        <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+        {/* THEME TOGGLE */}
+        <button onClick={toggleTheme} className="text-white text-xl">
+          {dark ? "☀️" : "🌙"}
+        </button>
+
+        {/* AVATAR */}
+        <div className="w-10 h-10 bg-gray-400 rounded-full"></div>
+
       </div>
-
     </aside>
   );
 }
